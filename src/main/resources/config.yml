@@ -1,0 +1,41 @@
+# ----MODE----
+# easy   - allowed `/ns vote now` and `/ns vote always` system (also sleep system)
+# medium - allowed `/ns vote now` system (also sleep system)
+# hard   - allowed only sleep system
+mode: easy
+
+players-condition:  # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
+  op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
+  lvalue: voted     # variable `voted` online players who voted
+  rvalue: 50%       # 50% of online player count
+
+value:
+  skip-step: 50                # minecraft time of step when night is skipping
+  thunderstorm-skip-step: 250  # minecraft time of step when thunderstorm is skipping
+
+text:  # message texts
+  config-reloaded: '&2Config reloaded'
+  config-reseted: '&2Config reseted'
+  night: night
+  thunderstorm: thunderstorm
+  and: '&'
+  in-progress: '&2Skipping %target% in progress...'
+  already-in-progress: '&cSkipping %target% is already in progress!'
+  finished: '&2&+%target% skipped!'
+  cannot-skip: '&cNow is not night or thunderstorm!'
+  invalid-format: '&cInvalid command format!'
+  always-vote-enabled: '&2Now your vote will be counted automatically!'
+  always-vote-disabled: '&cNow in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
+  voted-now: Voted for skipping %voted% out of %players%
+  voted-layed-now: Voted for skipping %voted% out of %players% (%sleeping% are sleeping)'
+  goodnight: '&dGood night!'
+  vote-taken: '&2%sender%, your vote is taken into account!'
+  cannot-cancel-vote: '&c%sender%, you cannot cancel vote!'
+
+  usage: |-
+    &n&lCommand usage:&r
+    %prefix%%label% skip
+    %prefix%%label% config reset
+    %prefix%%label% config reload
+    %prefix%%label% vote now
+    %prefix%%label% vote always

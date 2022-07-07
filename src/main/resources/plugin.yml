@@ -1,0 +1,12 @@
+name: NightSkipper
+version: 1.0.0
+main: pextystudios.nightskipper.NightSkipper
+api-version: 1.13
+authors: [ TeaCondemns ]
+description: NightSkipper allows you to skip nights differently
+commands:
+  nightskipper:
+    aliases:
+      - ns
+    description: NightSkipper plugin command
+    permission: nightskipper
