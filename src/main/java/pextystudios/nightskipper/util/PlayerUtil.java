@@ -1,7 +1,12 @@
 package pextystudios.nightskipper.util;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.GameMode;
+import org.bukkit.Statistic;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import pextystudios.nightskipper.NightSkipper;
 
 import java.util.Arrays;
@@ -32,6 +37,52 @@ public final class PlayerUtil {
 
             i++;
         }
+    }
+
+    public static @NotNull HashSet<Player> getPlayers(boolean includeConfigSettings) {
+        HashSet<Player> players = new HashSet<>();
+
+        ConfigurationSection words_list = NightSkipper.getInstance().getConfig().getConfigurationSection("feature.words-list");
+
+        for (World world: NightSkipper.getInstance().getServer().getWorlds()) {
+            if (!includeConfigSettings) {
+                players.addAll(world.getPlayers());
+                continue;
+            }
+
+            if (words_list.getList("words").contains(world.getKey().asString()))
+                if (words_list.getString("mode").equals("blacklist")) continue;
+            else if (words_list.getString("mode").equals("whitelist")) continue;
+
+            players.addAll(world.getPlayers());
+        }
+
+        if (!includeConfigSettings) return players;
+
+        for (Player player: NightSkipper.getCurrentWorld().getPlayers()) {
+            if (player.getGameMode() == GameMode.ADVENTURE && NightSkipper.getFeatureEnabled("exclude.adventure"))
+                players.remove(player);
+
+            if (player.getGameMode() == GameMode.CREATIVE && NightSkipper.getFeatureEnabled("exclude.creative"))
+                players.remove(player);
+
+            if (player.getGameMode() == GameMode.SPECTATOR && NightSkipper.getFeatureEnabled("exclude.spectator"))
+                players.remove(player);
+
+            if (player.isInvisible() && NightSkipper.getFeatureEnabled("exclude.vanished"))
+                players.remove(player);
+        }
+
+        return players;
+    }
+
+    public static HashSet<String> getPlayerNames(boolean includeConfigSettings) {
+        HashSet<String> players = new HashSet<>();
+
+        for (Player player: getPlayers(true))
+            players.add(player.getName());
+
+        return players;
     }
 
     public static boolean hasAlwaysVotingPlayer(String playerNickname) {
@@ -103,16 +154,14 @@ public final class PlayerUtil {
 
         HashSet<String> hashSet = new HashSet<>(Arrays.asList(lyingPlayers));
 
-        if (NightSkipper.getMode().equals("easy"))
+        if (NightSkipper.getFeatureEnabled("command.always-vote"))
             hashSet.addAll(Arrays.asList(alwaysVotingPlayers));
 
-        if (!NightSkipper.getMode().equals("hard"))
+        if (!NightSkipper.getFeatureEnabled("command.now-vote"))
             hashSet.addAll(Arrays.asList(cmdVotingPlayers));
 
         if (!includeOffline) {
-            HashSet<String> onlinePlayers = new HashSet<>();
-            for (Player player: NightSkipper.getCurrentWorld().getPlayers())
-                onlinePlayers.add(player.getName());
+            HashSet<String> onlinePlayers = getPlayerNames(true);
 
             hashSet.removeIf(player -> !onlinePlayers.contains(player));
         }
@@ -120,7 +169,12 @@ public final class PlayerUtil {
         return hashSet.size();
     }
 
-    public static int getPlayerCount() {
-        return NightSkipper.getCurrentWorld().getPlayerCount();
+    public static int getPlayerCount(boolean includeConfigSettings) {
+        return getPlayers(includeConfigSettings).size();
+    }
+
+    public static void resetPhantomStatistic() {
+        for (Player player: NightSkipper.getCurrentWorld().getPlayers())
+            player.setStatistic(Statistic.TIME_SINCE_REST, 0);
     }
 }

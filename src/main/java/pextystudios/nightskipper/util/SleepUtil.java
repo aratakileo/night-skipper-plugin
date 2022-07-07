@@ -16,26 +16,40 @@ public final class SleepUtil {
     private static boolean useThunderstormStep = false;
 
     private static long getTimeStepSkip() {
-        return useThunderstormStep ? NightSkipper.getInstance().getConfig().getLong("value.thunderstorm-skip-step") : NightSkipper.getInstance().getConfig().getLong("value.skip-step");
+        return useThunderstormStep ? NightSkipper.getInstance().getConfig().getLong("feature.animation-frame.thunderstorm-amplitude") : NightSkipper.getInstance().getConfig().getLong("feature.animation-frame.night-amplitude");
     }
 
     public static boolean isSleepTime() {
         long currentTime = NightSkipper.getCurrentWorld().getTime();
-        return currentTime >= timeToSleep && currentTime < wakeupTime || WeatherUtil.isThunderstorm();
+        return currentTime >= timeToSleep && currentTime < wakeupTime && NightSkipper.getFeatureEnabled("skip.night") || WeatherUtil.isThunderstorm() && NightSkipper.getFeatureEnabled("skip.thunderstorm");
     }
     public static boolean isNightSkipActive() {return taskID != -1;}
 
     public static void skipNight(SkipFinishingInterface _skipFinishingInterface) {
-        if (NightSkipper.getCurrentWorld().getTime() >= (wakeupTime - getTimeStepSkip() * 2) && WeatherUtil.hasRain() && isNightSkipActive())
+        if (_skipFinishingInterface != null) skipFinishingInterface = _skipFinishingInterface;
+
+        if (!NightSkipper.getFeatureEnabled("animation-frame.enabled") && isSleepTime()) NightSkipper.getCurrentWorld().setTime(wakeupTime);
+
+        if (NightSkipper.getCurrentWorld().getTime() >= (wakeupTime - getTimeStepSkip() * 2) && isNightSkipActive() && (
+                WeatherUtil.isThunderstorm() && NightSkipper.getFeatureEnabled("skip.thunderstorm")
+                        ||
+                        WeatherUtil.isRain() && NightSkipper.getFeatureEnabled("clear-rain")
+        )
+        )
             WeatherUtil.clear();
 
-        if (_skipFinishingInterface != null) skipFinishingInterface = _skipFinishingInterface;
+        if (!NightSkipper.getFeatureEnabled("animation-frame.enabled")) {
+            skipFinishingInterface.onFinish();
+            return;
+        }
 
         if (!isSleepTime()) {
             if (skipFinishingInterface != null) skipFinishingInterface.onFinish();
             skipFinishingInterface = null;
-
             taskID = -1;
+
+            if (NightSkipper.getFeatureEnabled("reset-phantom-statistic"))
+                PlayerUtil.resetPhantomStatistic();
 
             return;
         }
@@ -46,7 +60,7 @@ public final class SleepUtil {
             NightSkipper.getCurrentWorld().setTime(NightSkipper.getCurrentWorld().getTime() + getTimeStepSkip());
 
             skipNight(null);
-        }), 1);
+        }), NightSkipper.getInstance().getConfig().getLong("feature.animation-frame.frequency"));
     }
 
     public static void cancelSkipNight() {

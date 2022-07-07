@@ -12,7 +12,6 @@ public final class SkipUtil {
 
     private static void init() {
         if (!inited) {
-            String mode = NightSkipper.getMode();
             inited = true;
 
             conditionEngine.addGetter("voted", PlayerUtil::votePlayerCount);
@@ -31,7 +30,7 @@ public final class SkipUtil {
         target = NightSkipper.getCurrentWorld().getTime() >= SleepUtil.timeToSleep && NightSkipper.getCurrentWorld().isThundering() ? target + " " + NightSkipper.getText("and") + " " + NightSkipper.getText("night") : target;
 
         formatVars.put("target", target);
-        formatVars.put("players", String.valueOf(PlayerUtil.getPlayerCount()));
+        formatVars.put("players", String.valueOf(PlayerUtil.getPlayerCount(true)));
         formatVars.put("voted", String.valueOf(PlayerUtil.votePlayerCount()));
         formatVars.put("sleeping", String.valueOf(PlayerUtil.lyingPlayerCount()));
 
@@ -41,7 +40,7 @@ public final class SkipUtil {
             return;
         }
 
-        if (!conditionEngine.exec(config.getString("players-condition.lvalue"), config.getString("players-condition.rvalue"), config.getString("players-condition.op"))) {
+        if (!conditionEngine.exec(config.getString("condition.lvalue"), config.getString("condition.rvalue"), config.getString("condition.op"))) {
             NotificationUtil.send(NightSkipper.getText("voted-now", formatVars));
             SleepUtil.cancelSkipNight();
             return;

@@ -1,36 +1,63 @@
-# ----MODE----
-# easy   - allowed `/ns vote now` and `/ns vote always` system (also sleep system)
-# medium - allowed `/ns vote now` system (also sleep system)
-# hard   - allowed only sleep system
-mode: easy
+feature:
+  skip:  # if you have disabled both functions, then we recommend that you consider removing this plugin.
+    night: true
+    thunderstorm: true
 
-players-condition:  # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
-  op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
-  lvalue: voted     # variable `voted` online players who voted
-  rvalue: 50%       # 50% of online player count
+  command:             # those commands enabled:
+    now-vote: true     # /ns vote now    | /nightskipper vote now
+    always-vote: true  # /ns vote always | /nightskipper vote always
 
-value:
-  skip-step: 50                # minecraft time of step when night is skipping
-  thunderstorm-skip-step: 250  # minecraft time of step when thunderstorm is skipping
+  clear-rain: true  # clear rain when night will skipped
+
+  exclude:  # exclude players out of counting with that modes:
+    adventure: true
+    creative: true
+    spectator: true
+    vanished: true
+
+  words-list:
+    mode: blacklist  # blacklist/whitelist
+    words: [minecraft:the_nether, minecraft:the_end]
+
+  animation-frame:
+    enabled: true
+    night-amplitude: 50          # time increasing into frame when night
+    thunderstorm-amplitude: 250  # time increasing into frame when thunder
+    frequency: 1                 # animation frequency in server ticks
+
+  reset-phantom-statistic: true
+
+condition:       # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
+  op: '>='       # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
+  lvalue: voted  # variable `voted` online players who voted
+  rvalue: 50%    # 50% of online player count
 
 text:  # message texts
-  config-reloaded: '&2Config reloaded'
-  config-reseted: '&2Config reseted'
   night: night
   thunderstorm: thunderstorm
   and: '&'
+
   in-progress: '&2Skipping %target% in progress...'
   already-in-progress: '&cSkipping %target% is already in progress!'
   finished: '&2&+%target% skipped!'
   cannot-skip: '&cNow is not night or thunderstorm!'
-  invalid-format: '&cInvalid command format!'
-  always-vote-enabled: '&2Now your vote will be counted automatically!'
-  always-vote-disabled: '&cNow in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
-  voted-now: Voted for skipping %voted% out of %players%
-  voted-layed-now: Voted for skipping %voted% out of %players% (%sleeping% are sleeping)'
   goodnight: '&dGood night!'
+
+  always-vote-enabled: '&2%sender%, now your vote will be counted automatically!'
+  always-vote-disabled: '&c%sender%, now in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
   vote-taken: '&2%sender%, your vote is taken into account!'
   cannot-cancel-vote: '&c%sender%, you cannot cancel vote!'
+  already-voted: '&c%sender%, your vote has already been counted!'
+  cannot-vote: '&c%sender%, you cannot vote now!'
+
+  voted-now: Voted for skipping %voted% out of %players%
+  voted-layed-now: Voted for skipping %voted% out of %players% (%sleeping% are sleeping)
+
+  config-reloaded: '&2Config reloaded'
+  config-reseted: '&2Config reseted'
+
+  feature-disabled: '&cThis feature is disabled or unavailable!'
+  invalid-format: '&cInvalid command format!'
 
   usage: |-
     &n&lCommand usage:&r

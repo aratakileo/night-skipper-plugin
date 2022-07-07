@@ -1,5 +1,5 @@
 name: NightSkipper
-version: 1.0.0
+version: 1.0.1
 main: pextystudios.nightskipper.NightSkipper
 api-version: 1.13
 authors: [ TeaCondemns ]
@@ -9,4 +9,8 @@ commands:
     aliases:
       - ns
     description: NightSkipper plugin command
-    permission: nightskipper
+    permission: nightskipper.admin
+
+permissions:
+  nightskipper.admin:
+    default: op

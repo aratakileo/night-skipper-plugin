@@ -36,9 +36,6 @@ public class ConditionEngine {
         if (value == null) return false;
         values[1] = value[0];
 
-
-        LoggerUtil.warn(values[0] + op + values[1]);
-
         switch (op) {
             case "==":
                 return values[0] == values[1];
@@ -78,7 +75,7 @@ public class ConditionEngine {
             case "num":
                 return new int[] {Integer.getInteger(value)};
             case "percent":
-                return new int[] {(int) ((double)PlayerUtil.getPlayerCount() * (Double.parseDouble(value.substring(0, value.length() - 1)) / 100.0))};
+                return new int[] {(int) ((double)PlayerUtil.getPlayerCount(true) * (Double.parseDouble(value.substring(0, value.length() - 1)) / 100.0))};
             case "var":
                 if (getters.containsKey(value))
                     return new int[]{getters.get(value).get()};

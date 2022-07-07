@@ -1,7 +1,6 @@
 package pextystudios.nightskipper.util;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import pextystudios.nightskipper.NightSkipper;
 
@@ -12,7 +11,9 @@ public final class NotificationUtil {
     private static long finalTime = -1;
 
     public static void clear() {
-        if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
+        try {
+            if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
+        } catch (Exception ignore) {}
 
         finalTime = -1;
         taskID = -1;
