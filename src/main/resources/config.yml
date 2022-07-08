@@ -46,7 +46,6 @@ text:  # message texts
   always-vote-enabled: '&2%sender%, now your vote will be counted automatically!'
   always-vote-disabled: '&c%sender%, now in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
   vote-taken: '&2%sender%, your vote is taken into account!'
-  cannot-cancel-vote: '&c%sender%, you cannot cancel vote!'
   already-voted: '&c%sender%, your vote has already been counted!'
   cannot-vote: '&c%sender%, you cannot vote now!'
 

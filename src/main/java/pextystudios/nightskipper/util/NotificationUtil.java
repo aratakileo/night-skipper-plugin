@@ -11,9 +11,7 @@ public final class NotificationUtil {
     private static long finalTime = -1;
 
     public static void clear() {
-        try {
-            if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
-        } catch (Exception ignore) {}
+        if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
 
         finalTime = -1;
         taskID = -1;

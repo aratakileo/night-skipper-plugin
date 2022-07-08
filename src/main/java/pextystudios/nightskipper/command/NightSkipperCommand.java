@@ -97,13 +97,8 @@ public class NightSkipperCommand extends AbstractCommand {
                         return;
                     }
 
-                    if (NightSkipper.getFeatureEnabled("command.always-vote") && PlayerUtil.hasAlwaysVotingPlayer(commandSender.getName())) {
+                    if (NightSkipper.getFeatureEnabled("command.always-vote") && PlayerUtil.hasAlwaysVotingPlayer(commandSender.getName()) || PlayerUtil.hasCmdVotingPlayer(commandSender.getName())) {
                         commandSender.sendMessage(NightSkipper.getText("already-voted", formatVars));
-                        return;
-                    }
-
-                    if (PlayerUtil.hasCmdVotingPlayer(commandSender.getName())) {
-                        commandSender.sendMessage(NightSkipper.getText("cannot-cancel-vote", formatVars));
                         return;
                     }
 

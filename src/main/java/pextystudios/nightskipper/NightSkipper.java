@@ -15,6 +15,7 @@ public final class NightSkipper extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+
         instance = this;
 
         saveDefaultConfig();
@@ -27,9 +28,9 @@ public final class NightSkipper extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        NotificationUtil.clear();
-        PlayerUtil.saveAlwaysVotingPlayerList();
         // Plugin shutdown logic
+
+        PlayerUtil.saveAlwaysVotingPlayerList();
     }
 
     public static void reloadConfigValues() {
