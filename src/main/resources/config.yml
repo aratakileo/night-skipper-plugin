@@ -20,12 +20,12 @@ feature:
     words: [minecraft:the_nether, minecraft:the_end]
 
   animation-frame:
-    enabled: true
+    enabled: true                # skipping night/thunderstorm animation enabled
     night-amplitude: 50          # time increasing into frame when night
     thunderstorm-amplitude: 250  # time increasing into frame when thunder
     frequency: 1                 # animation frequency in server ticks
 
-  reset-phantom-statistic: true
+  reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
 
 condition:       # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
   op: '>='       # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
