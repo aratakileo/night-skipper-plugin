@@ -4,7 +4,18 @@ NightSkipper allows you to skip nights differently!
 Players will be able to skip the night with beautiful animation, according to the configuration settings, they will be able to do this either with automatic consideration of their voice, or with consideration of their voice through the use of a command, or if they went to bed.
 > **WORKS ONLY WITH SERVERS THAT HAS ONLY ONE WORLD!**
 
-Settings in `config.yml`
+### Commands
+`/ns skip`          | `/nightskipper skip`          - command for admins, that let skip night or thunderstorm
+
+`/ns config reset`  | `/nightskipper config reset`  - command for admins, that let reset config values to default
+
+`/ns config reload` | `/nightskipper config reload` - command for admins, that let reload config (apply new config values)
+
+`/ns vote now`      | `/nightskipper vote now`      - command for players, that let vote for skipping night or thunderstorm at the moment
+
+`/ns vote always`   | `/nightskipper vote always`   - command for players, that let always counting vote for skipping night or thunderstorm after using this command
+
+### Settings in `config.yml`
 
 ```yml
 feature:
