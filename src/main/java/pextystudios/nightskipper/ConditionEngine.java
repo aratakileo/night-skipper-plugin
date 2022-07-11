@@ -73,7 +73,7 @@ public class ConditionEngine {
 
         switch (type) {
             case "num":
-                return new int[] {Integer.getInteger(value)};
+                return new int[] {(int)Double.parseDouble(value)};
             case "percent":
                 return new int[] {(int) ((double)PlayerUtil.getPlayerCount(true) * (Double.parseDouble(value.substring(0, value.length() - 1)) / 100.0))};
             case "var":

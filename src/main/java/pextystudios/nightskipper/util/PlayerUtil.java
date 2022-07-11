@@ -62,7 +62,7 @@ public final class PlayerUtil {
     public static @NotNull HashSet<Player> getPlayers(boolean includeConfigSettings) {
         HashSet<Player> players = new HashSet<>();
 
-        ConfigurationSection words_list = NightSkipper.getInstance().getConfig().getConfigurationSection("feature.words-list");
+        ConfigurationSection words_list = NightSkipper.getInstance().getConfig().getConfigurationSection("feature.worlds-list");
 
         for (World world: NightSkipper.getInstance().getServer().getWorlds()) {
             if (!includeConfigSettings) {
@@ -70,7 +70,7 @@ public final class PlayerUtil {
                 continue;
             }
 
-            if (words_list.getList("words").contains(world.getKey().asString()))
+            if (words_list.getList("worlds").contains(world.getKey().asString()))
                 if (words_list.getString("mode").equals("blacklist")) continue;
             else if (words_list.getString("mode").equals("whitelist")) continue;
 

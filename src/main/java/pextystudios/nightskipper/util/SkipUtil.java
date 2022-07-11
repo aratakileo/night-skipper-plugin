@@ -15,6 +15,7 @@ public final class SkipUtil {
             inited = true;
 
             conditionEngine.addGetter("voted", PlayerUtil::votePlayerCount);
+            conditionEngine.addGetter("sleeping", PlayerUtil::lyingPlayerCount);
         }
     }
 
@@ -34,26 +35,29 @@ public final class SkipUtil {
         formatVars.put("voted", String.valueOf(PlayerUtil.votePlayerCount()));
         formatVars.put("sleeping", String.valueOf(PlayerUtil.lyingPlayerCount()));
 
-        if (PlayerUtil.lyingPlayerCount() == 0) {
+        if (!conditionEngine.exec(config.getString("condition.sleep.lvalue"), config.getString("condition.sleep.rvalue"), config.getString("condition.sleep.op"))) {
             NotificationUtil.send(NightSkipper.getText("voted-layed-now", formatVars));
             SleepUtil.cancelSkipNight();
+            SleepUtil.reloadTarget();
             MailingUtil.tryMailToPlayers();
             return;
         }
 
-        if (!conditionEngine.exec(config.getString("condition.lvalue"), config.getString("condition.rvalue"), config.getString("condition.op"))) {
+        if (!conditionEngine.exec(config.getString("condition.vote.lvalue"), config.getString("condition.vote.rvalue"), config.getString("condition.vote.op"))) {
             NotificationUtil.send(NightSkipper.getText("voted-now", formatVars));
             SleepUtil.cancelSkipNight();
+            SleepUtil.reloadTarget();
             MailingUtil.tryMailToPlayers();
             return;
         }
 
         NotificationUtil.send(NightSkipper.getText("goodnight", formatVars));
 
-        SleepUtil.skipNight(() -> {
-            NotificationUtil.send(NightSkipper.getText("wakeup", formatVars), 5000);
-            PlayerUtil.removeAllCmdPlayer();
-            MailingUtil.clear();
-        });
+        if (!SleepUtil.isNightSkipActive())
+            SleepUtil.skipNight(() -> {
+                NotificationUtil.send(NightSkipper.getText("wakeup", formatVars), 5000);
+                PlayerUtil.removeAllCmdPlayer();
+                MailingUtil.clear();
+            });
     }
 }

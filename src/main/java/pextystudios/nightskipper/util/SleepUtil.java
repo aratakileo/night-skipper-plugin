@@ -27,6 +27,11 @@ public final class SleepUtil {
     }
     public static boolean isNightSkipActive() {return taskID != -1;}
 
+    public static void reloadTarget() {
+        target = NightSkipper.getCurrentWorld().isThundering() ? NightSkipper.getText("thunderstorm") : NightSkipper.getText("night");
+        target = NightSkipper.getCurrentWorld().getTime() >= timeToSleep && NightSkipper.getCurrentWorld().isThundering() ? target + " " + NightSkipper.getText("and") + " " + NightSkipper.getText("night") : target;
+    }
+
     public static String getTarget() {
         return target;
     }
@@ -44,9 +49,6 @@ public final class SleepUtil {
         )
             WeatherUtil.clear();
 
-        target = NightSkipper.getCurrentWorld().isThundering() ? NightSkipper.getText("thunderstorm") : NightSkipper.getText("night");
-        target = NightSkipper.getCurrentWorld().getTime() >= timeToSleep && NightSkipper.getCurrentWorld().isThundering() ? target + " " + NightSkipper.getText("and") + " " + NightSkipper.getText("night") : target;
-
         if (!NightSkipper.getFeatureEnabled("animation-frame.enabled")) {
             skipFinishingInterface.onFinish();
             return;
@@ -62,8 +64,11 @@ public final class SleepUtil {
 
             return;
         }
-        if (!isNightSkipActive())
+
+        if (!isNightSkipActive()) {
             useThunderstormStep = WeatherUtil.isThunderstorm() && NightSkipper.getCurrentWorld().getTime() < maxTime / 3;
+            reloadTarget();
+        }
 
         taskID = NightSkipper.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(NightSkipper.getInstance(), (() -> {
             NightSkipper.getCurrentWorld().setTime(NightSkipper.getCurrentWorld().getTime() + getTimeStepSkip());

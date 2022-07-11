@@ -1,18 +1,70 @@
 package pextystudios.nightskipper.command;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.Nullable;
 import pextystudios.nightskipper.NightSkipper;
+import pextystudios.nightskipper.util.LoggerUtil;
 import pextystudios.nightskipper.util.PlayerUtil;
 import pextystudios.nightskipper.util.SkipUtil;
 import pextystudios.nightskipper.util.SleepUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class NightSkipperCommand extends AbstractCommand {
     public NightSkipperCommand() {
         super("nightskipper");
+    }
+
+    private static ArrayList<String> getConfigKeys() {
+        String[] ignore = {
+                "feature",
+                "feature.skip",
+                "feature.command",
+                "feature.exclude",
+                "feature.worlds-list",
+                "feature.animation-frame",
+                "text",
+                "condition",
+                "condition.sleep",
+                "condition.vote"
+        };
+
+        ArrayList<String> keys = new ArrayList<>();
+
+        for (String key: NightSkipper.getInstance().getConfig().getKeys(true))
+            if (!ArrayUtils.contains(ignore, key))
+                keys.add(key);
+
+        int size = NightSkipper.getInstance().getConfig().getList("feature.worlds-list.worlds").size();
+        for (int i = 0; i <= size; i++)
+            keys.add("feature.worlds-list.worlds[" + i + ']');
+
+        return keys;
+    }
+
+    private static String getValueType(@Nullable String value) {
+        if (Pattern.compile("^true|false|yes|no$").matcher(value).find()) return "bool";
+        if (Pattern.compile("^\\d+$").matcher(value).find()) return "int";
+        if (Pattern.compile("^blacklist|whitelist$").matcher(value).find()) return "pass";
+        if (Pattern.compile("^<=|>=|==|!=|<|>$").matcher(value).find()) return "op";
+
+        return "str";
+    }
+
+    private static List<String> getWorldsList() {
+        List<String> stringList = NightSkipper.getInstance().getConfig().getStringList("feature.worlds-list.worlds");
+        stringList.add(stringList.get(0));
+        return stringList;
+    }
+
+    private static String getWorldsListValue(String key) {
+        return getWorldsList().get((int)Double.parseDouble(key.substring("feature.worlds-list.worlds".length() + 1, key.length() - 1)));
     }
 
     @Override
@@ -45,17 +97,36 @@ public class NightSkipperCommand extends AbstractCommand {
                     return;
                 }
 
-                if (args[0].equals("config") && args.length == 2)
-                    switch (args[1]) {
-                        case "reset":
-                            NightSkipper.resetConfigValues();
-                            commandSender.sendMessage(NightSkipper.getText("config-reseted", formatVars));
+                if (args[0].equals("config")) {
+                    if (args.length == 2)
+                        switch (args[1]) {
+                            case "reset":
+                                NightSkipper.resetConfigValues();
+                                commandSender.sendMessage(NightSkipper.getText("config-reseted", formatVars));
+                                return;
+                            case "reload":
+                                NightSkipper.reloadConfigValues();
+                                commandSender.sendMessage(NightSkipper.getText("config-reloaded", formatVars));
+                                return;
+                            case "value":
+                                commandSender.sendMessage("Config keys:\n" + StringUtils.join(getConfigKeys(), "\n"));
+                                return;
+                        }
+
+                    if (args.length >= 3 && args[1].equals("value") && getConfigKeys().contains(args[2])) {
+                        if (args.length == 3) {
+                            String value;
+                            if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds["))
+                                value = getWorldsListValue(args[2]);
+                            else if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds"))
+                                value = NightSkipper.getInstance().getConfig().getList(args[2]).toString();
+                            else value = NightSkipper.getInstance().getConfig().getString(args[2]);
+
+                            commandSender.sendMessage(args[2] + ": " + value.replace("\n", "\\n"));
                             return;
-                        case "reload":
-                            NightSkipper.reloadConfigValues();
-                            commandSender.sendMessage(NightSkipper.getText("config-reloaded", formatVars));
-                            return;
+                        }
                     }
+                }
             }
 
         if (args.length == 2 && args[0].equals("vote")) {
@@ -133,7 +204,7 @@ public class NightSkipperCommand extends AbstractCommand {
             switch (args[0]) {
                 case "config":
                     if (sender.hasPermission("nightskipper.admin"))
-                        completeList.addAll(Lists.newArrayList("reset", "reload"));
+                        completeList.addAll(Lists.newArrayList("reset", "reload", "value"));
                     break;
                 case "vote":
                     if (NightSkipper.getFeatureEnabled("command.now-vote") && (!NightSkipper.getFeatureEnabled("command.always-vote") || !PlayerUtil.hasAlwaysVotingPlayer(sender.getName())))
@@ -146,6 +217,88 @@ public class NightSkipperCommand extends AbstractCommand {
             }
 
             return completeList;
+        }
+
+        if (args.length >= 3 && args[0].equals("config") && args[1].equals("value")) {
+            if (args.length == 3)
+                completeList.addAll(getConfigKeys());
+
+            if (!getConfigKeys().contains(args[2])) return completeList;
+            String value;
+            if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds[")) {
+                value = getWorldsListValue(args[2]);
+
+                completeList.addAll(getWorldsList());
+            } else if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds"))
+                value = "";
+            else value = NightSkipper.getInstance().getConfig().getString(args[2]);
+
+            completeList.add(value);
+
+            switch (getValueType(value)) {
+                case "str":
+                    if (Pattern.compile("condition\\.(?:vote|sleep)\\.[rl]value").matcher(args[2]).find()) {
+                        if (args.length == 4) {
+                            if (Pattern.compile("^\\d+%?$").matcher(args[3]).find()) {
+                                completeList.add(args[3] + " ");
+
+                                if (args[3].charAt(args[3].length() - 1) != '%')
+                                    completeList.add(args[3] + '%');
+                            } else for (int i = 0; i <= 9; i++) completeList.add(String.valueOf(i));
+
+                            completeList.add("voted");
+                            completeList.add("sleeping");
+                            break;
+                        }
+
+                        completeList.clear();
+                        break;
+                    }
+
+                    if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds[")) {
+                        if (args.length > 4)
+                            completeList.clear();
+
+                        break;
+                    } else if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds")) {
+                        completeList.clear();
+                        break;
+                    }
+
+                    if (args.length >= 4 && args[args.length - 1].length() > 0)
+                        completeList.add(args[args.length - 1] + " ");
+
+                    break;
+                case "bool":
+                    if (args.length == 4) {
+                        completeList.add("true");
+                        completeList.add("false");
+                    }
+                    break;
+                case "int":
+                    if (args.length == 4) {
+                        if (Pattern.compile("^\\d+$").matcher(args[3]).find())
+                            completeList.add(args[3] + " ");
+
+                    }
+                    break;
+                case "pass":
+                    if (args.length == 4) {
+                        completeList.add("whitelist");
+                        completeList.add("blacklist");
+                    }
+                    break;
+                case "op":
+                    if (args.length == 4) {
+                        completeList.add(">");
+                        completeList.add("<");
+                        completeList.add(">=");
+                        completeList.add("<=");
+                        completeList.add("!=");
+                        completeList.add("==");
+                    }
+                    break;
+            }
         }
 
         return completeList;

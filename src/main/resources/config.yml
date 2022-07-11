@@ -15,9 +15,9 @@ feature:
     spectator: true
     vanished: true
 
-  words-list:
+  worlds-list:
     mode: blacklist  # blacklist/whitelist
-    words: [minecraft:the_nether, minecraft:the_end]
+    worlds: [minecraft:the_nether, minecraft:the_end]
 
   animation-frame:
     enabled: true                # skipping night/thunderstorm animation enabled
@@ -28,10 +28,15 @@ feature:
   reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
   send-skip-suggestion: true     # Works only if `feature.command.now-vote` is enabled
 
-condition:       # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
-  op: '>='       # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
-  lvalue: voted  # variable `voted` online players who voted
-  rvalue: 50%    # 50% of online player count
+condition:            # if condition is true, then night or thunderstorm will skipped
+  vote:
+    op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
+    lvalue: voted     # variable `voted` - online players who voted
+    rvalue: 50%       # 50% of online player count
+  sleep:
+    op: '>'
+    lvalue: sleeping  # variable `sleeping` - online players who are sleeping
+    rvalue: 0         # 0 players
 
 text:  # message texts
   night: night
@@ -68,6 +73,7 @@ text:  # message texts
     &n&lCommand usage:&r
     %prefix%%label% skip
     %prefix%%label% config reset
+    %prefix%%label% config value
     %prefix%%label% config reload
     %prefix%%label% vote now
     %prefix%%label% vote always
