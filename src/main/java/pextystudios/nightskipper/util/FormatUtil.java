@@ -2,6 +2,7 @@ package pextystudios.nightskipper.util;
 
 import org.apache.commons.lang.WordUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -14,12 +15,13 @@ public final class FormatUtil {
         return format(text, null);
     }
 
-    public static @NotNull String format(@NotNull String text, HashMap<String, String> formatVars) {
+    public static @NotNull String format(@NotNull String text, @Nullable HashMap<String, String> formatVars) {
         final Matcher matcher = pattern.matcher(text);
 
         if (formatVars != null && !formatVars.isEmpty())
             for (String key: formatVars.keySet())
-                text = text.replace('%' + key + '%', formatVars.get(key));
+                if (text.contains('%' + key + '%'))
+                    text = format(text.replace('%' + key + '%', formatVars.get(key)), formatVars);
 
         while (matcher.find()) {
             String value = matcher.group(1);

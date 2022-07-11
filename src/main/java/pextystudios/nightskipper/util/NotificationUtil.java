@@ -10,8 +10,16 @@ public final class NotificationUtil {
     private static int taskID = -1;
     private static long finalTime = -1;
 
+    public static boolean hasDisplayingNotification() {
+        return taskID != -1;
+    }
+
+    public static boolean currentNotificationHasDuration() {
+        return finalTime != -1;
+    }
+
     public static void clear() {
-        if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
+        if (hasDisplayingNotification()) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
 
         finalTime = -1;
         taskID = -1;
@@ -38,13 +46,13 @@ public final class NotificationUtil {
     private static void iterationSend(Component component, boolean iteration) {
         final long currentTime = new Date().getTime();
 
-        if (finalTime != -1 && currentTime >= finalTime && iteration) {
+        if (hasDisplayingNotification() && currentTime >= finalTime && iteration) {
             taskID = -1;
             finalTime = -1;
             return;
         }
 
-        if (taskID != -1) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
+        if (hasDisplayingNotification()) NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
 
         for (Player player : NightSkipper.getInstance().getServer().getOnlinePlayers())
             player.sendActionBar(component);

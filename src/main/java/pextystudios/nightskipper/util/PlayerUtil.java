@@ -39,6 +39,26 @@ public final class PlayerUtil {
         }
     }
 
+    private static HashSet<String> getVotedPlayers(boolean includeOffline) {
+        checkDataInit();
+
+        HashSet<String> votedPlayers = new HashSet<>(Arrays.asList(lyingPlayers));
+
+        if (NightSkipper.getFeatureEnabled("command.always-vote"))
+            votedPlayers.addAll(Arrays.asList(alwaysVotingPlayers));
+
+        if (NightSkipper.getFeatureEnabled("command.now-vote"))
+            votedPlayers.addAll(Arrays.asList(cmdVotingPlayers));
+
+        if (!includeOffline) {
+            HashSet<String> onlinePlayers = getPlayerNames(true);
+
+            votedPlayers.removeIf(player -> !onlinePlayers.contains(player));
+        }
+
+        return votedPlayers;
+    }
+
     public static @NotNull HashSet<Player> getPlayers(boolean includeConfigSettings) {
         HashSet<Player> players = new HashSet<>();
 
@@ -98,6 +118,10 @@ public final class PlayerUtil {
         return ArrayUtils.contains(cmdVotingPlayers, playerNickname);
     }
 
+    public static boolean hasVotedPlayer(String playerNickname) {
+        return getVotedPlayers(false).contains(playerNickname);
+    }
+
     public static void addAlwaysVotingPlayer(String playerNickname) {
         if (hasAlwaysVotingPlayer(playerNickname)) return;
 
@@ -150,23 +174,7 @@ public final class PlayerUtil {
     }
 
     public static int votePlayerCount(boolean includeOffline) {
-        checkDataInit();
-
-        HashSet<String> hashSet = new HashSet<>(Arrays.asList(lyingPlayers));
-
-        if (NightSkipper.getFeatureEnabled("command.always-vote"))
-            hashSet.addAll(Arrays.asList(alwaysVotingPlayers));
-
-        if (!NightSkipper.getFeatureEnabled("command.now-vote"))
-            hashSet.addAll(Arrays.asList(cmdVotingPlayers));
-
-        if (!includeOffline) {
-            HashSet<String> onlinePlayers = getPlayerNames(true);
-
-            hashSet.removeIf(player -> !onlinePlayers.contains(player));
-        }
-
-        return hashSet.size();
+        return getVotedPlayers(includeOffline).size();
     }
 
     public static int getPlayerCount(boolean includeConfigSettings) {

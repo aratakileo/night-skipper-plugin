@@ -17,19 +17,16 @@ public class NightSkipperCommand extends AbstractCommand {
 
     @Override
     public void execute(CommandSender commandSender, String label, String[] args) {
-        HashMap<String, String> formatVars = new HashMap<>();
+        HashMap<String, String> formatVars = new HashMap<>(NightSkipper.getGlobalVars());
+
         formatVars.put("sender", commandSender.getName());
         formatVars.put("label", label);
         formatVars.put("prefix", commandSender.getName().equals("CONSOLE") ? "" : "/");
+        formatVars.put("target", SleepUtil.getTarget());
 
         if (commandSender.hasPermission("nightskipper.admin"))
             if (args.length > 0) {
                 if (args.length == 1 && args[0].equals("skip")) {
-                    String target = NightSkipper.getCurrentWorld().isThundering() ? NightSkipper.getText("thunderstorm") : NightSkipper.getText("night");
-                    target = NightSkipper.getCurrentWorld().getTime() >= SleepUtil.timeToSleep && NightSkipper.getCurrentWorld().isThundering() ? target + " " + NightSkipper.getText("and") + " " + NightSkipper.getText("night") : target;
-
-                    formatVars.put("target", target);
-
                     if (SleepUtil.isNightSkipActive()) {
                         commandSender.sendMessage(NightSkipper.getText("already-in-progress", formatVars));
                         return;

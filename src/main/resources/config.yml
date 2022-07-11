@@ -26,6 +26,7 @@ feature:
     frequency: 1                 # animation frequency in server ticks
 
   reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
+  send-skip-suggestion: true     # Works only if `feature.command.now-vote` is enabled
 
 condition:       # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
   op: '>='       # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
@@ -42,12 +43,17 @@ text:  # message texts
   finished: '&2&+%target% skipped!'
   cannot-skip: '&cNow is not night or thunderstorm!'
   goodnight: '&dGood night!'
+  wakeup: '%text.finished%'
 
   always-vote-enabled: '&2%sender%, now your vote will be counted automatically!'
   always-vote-disabled: '&c%sender%, now in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
   vote-taken: '&2%sender%, your vote is taken into account!'
   already-voted: '&c%sender%, your vote has already been counted!'
   cannot-vote: '&c%sender%, you cannot vote now!'
+
+  skip-suggestion: '&6Do you wanna skipping %target%? %vote-button%'
+  vote-button: '[&b&3Vote&r]'
+  vote-button-extra: '&o&dVoting for skipping %target%'
 
   voted-now: Voted for skipping %voted% out of %players%
   voted-layed-now: Voted for skipping %voted% out of %players% (%sleeping% are sleeping)

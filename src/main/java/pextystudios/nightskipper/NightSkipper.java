@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public final class NightSkipper extends JavaPlugin {
     private static NightSkipper instance;
+    private static final HashMap<String, String> globalVars = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -24,6 +25,15 @@ public final class NightSkipper extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventListener(), this);
 
         new NightSkipperCommand();
+
+        LifecycleUtil.init();
+        LifecycleUtil.addTicker(() -> {
+            if (SleepUtil.isSleepTime()) SkipUtil.tryToSkip();
+            else if (!NotificationUtil.currentNotificationHasDuration() && NotificationUtil.hasDisplayingNotification()) {
+                NotificationUtil.clear();
+                MailingUtil.clear();
+            }
+        });
     }
 
     @Override
@@ -31,6 +41,7 @@ public final class NightSkipper extends JavaPlugin {
         // Plugin shutdown logic
 
         PlayerUtil.saveAlwaysVotingPlayerList();
+        LifecycleUtil.destroy();
     }
 
     public static void reloadConfigValues() {
@@ -38,10 +49,13 @@ public final class NightSkipper extends JavaPlugin {
 
         if (!NightSkipper.getFeatureEnabled("skip.night") && !NightSkipper.getFeatureEnabled("skip.thunderstorm"))
             LoggerUtil.err("Since you have disabled `feature.skip.night` and `feature.skip.thunderstorm` the plugin cannot function properly, we recommend that you consider removing this plugin, or enabling one of these features in `config.yml`!");
+
+        reloadGlobalVariables();
     }
 
     public static void resetConfigValues() {
         instance.saveResource("config.yml", true);
+        reloadConfigValues();
     }
 
     public static NightSkipper getInstance() {
@@ -62,5 +76,16 @@ public final class NightSkipper extends JavaPlugin {
 
     public static boolean getFeatureEnabled(String feature) {
         return instance.getConfig().getBoolean("feature." + feature);
+    }
+
+    public static HashMap<String, String> getGlobalVars() {
+        return globalVars;
+    }
+
+    private static void reloadGlobalVariables() {
+        globalVars.clear();
+
+        for (String key: instance.getConfig().getConfigurationSection("text").getKeys(false))
+            globalVars.put("text." + key, instance.getConfig().getString("text." + key));
     }
 }

@@ -17,8 +17,6 @@ public class EventListener implements Listener {
             PlayerUtil.addLyingPlayer(e.getPlayer().getName());
             SkipUtil.tryToSkip();
         }
-
-        PlayerUtil.removeLyingPlayer(e.getPlayer().getName());
     }
 
     @EventHandler
@@ -36,10 +34,12 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerLeftGame(PlayerQuitEvent e) {
         PlayerUtil.removeCmdVotingPlayer(e.getPlayer().getName());
+        PlayerUtil.removeLyingPlayer(e.getPlayer().getName());
     }
 
     @EventHandler
     public void onPlayerKick(PlayerKickEvent e) {
         PlayerUtil.removeCmdVotingPlayer(e.getPlayer().getName());
+        PlayerUtil.removeLyingPlayer(e.getPlayer().getName());
     }
 }

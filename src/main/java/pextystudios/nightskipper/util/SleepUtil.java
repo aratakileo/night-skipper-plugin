@@ -10,6 +10,8 @@ public final class SleepUtil {
 
     private static int taskID = -1;
 
+    private static String target = "nothing";
+
     public static final long maxTime = 24000;
     public static final long wakeupTime = 23475;
     public static final long timeToSleep = 12545;
@@ -25,6 +27,10 @@ public final class SleepUtil {
     }
     public static boolean isNightSkipActive() {return taskID != -1;}
 
+    public static String getTarget() {
+        return target;
+    }
+
     public static void skipNight(SkipFinishingInterface _skipFinishingInterface) {
         if (_skipFinishingInterface != null) skipFinishingInterface = _skipFinishingInterface;
 
@@ -37,6 +43,9 @@ public final class SleepUtil {
         )
         )
             WeatherUtil.clear();
+
+        target = NightSkipper.getCurrentWorld().isThundering() ? NightSkipper.getText("thunderstorm") : NightSkipper.getText("night");
+        target = NightSkipper.getCurrentWorld().getTime() >= timeToSleep && NightSkipper.getCurrentWorld().isThundering() ? target + " " + NightSkipper.getText("and") + " " + NightSkipper.getText("night") : target;
 
         if (!NightSkipper.getFeatureEnabled("animation-frame.enabled")) {
             skipFinishingInterface.onFinish();
@@ -68,7 +77,6 @@ public final class SleepUtil {
             NightSkipper.getInstance().getServer().getScheduler().cancelTask(taskID);
             taskID = -1;
 
-            LoggerUtil.err(NightSkipper.getCurrentWorld().getTime());
             if (!isSleepTime() && skipFinishingInterface != null)
                 skipFinishingInterface.onFinish();
 
