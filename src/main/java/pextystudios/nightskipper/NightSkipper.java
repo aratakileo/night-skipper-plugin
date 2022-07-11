@@ -29,10 +29,6 @@ public final class NightSkipper extends JavaPlugin {
         LifecycleUtil.init();
         LifecycleUtil.addTicker(() -> {
             if (SleepUtil.isSleepTime()) SkipUtil.tryToSkip();
-            else if (!NotificationUtil.currentNotificationHasDuration() && NotificationUtil.hasDisplayingNotification()) {
-                NotificationUtil.clear();
-                MailingUtil.clear();
-            }
         });
     }
 
