@@ -29,9 +29,7 @@ public final class NightSkipper extends JavaPlugin {
         if (SleepUtil.isSleepTime()) SleepUtil.reloadTarget();
 
         LifecycleUtil.init();
-        LifecycleUtil.addTicker(() -> {
-            if (SleepUtil.isSleepTime()) SkipUtil.tryToSkip();
-        });
+        LifecycleUtil.addTicker(SkipUtil::tryToSkip);
     }
 
     @Override

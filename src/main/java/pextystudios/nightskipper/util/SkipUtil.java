@@ -22,12 +22,12 @@ public final class SkipUtil {
     public static void tryToSkip() {
         init();
 
-        FileConfiguration config = NightSkipper.getInstance().getConfig();
-
         if (!SleepUtil.isSleepTime()) {
             MailingUtil.clear();
             return;
         }
+
+        FileConfiguration config = NightSkipper.getInstance().getConfig();
         HashMap<String, String> formatVars = new HashMap<>(NightSkipper.getGlobalVars());
 
         formatVars.put("target", SleepUtil.getTarget());
