@@ -65,6 +65,7 @@ text:  # message texts
 
   config-reloaded: '&2Config reloaded'
   config-reseted: '&2Config reseted'
+  invalid-config-key: '&cInvalid config key: `%key%`!'
 
   feature-disabled: '&cThis feature is disabled or unavailable!'
   invalid-format: '&cInvalid command format!'
