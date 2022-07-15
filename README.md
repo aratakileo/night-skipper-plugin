@@ -9,6 +9,8 @@ Players will be able to skip the night with beautiful animation, according to th
 
 `/ns config reset`  | `/nightskipper config reset`  - command for admins, that let reset config values to default
 
+`/ns config value`  | `/nightskipper config value`  - command for admins, that let set/get selected config value
+
 `/ns config reload` | `/nightskipper config reload` - command for admins, that let reload config (apply new config values)
 
 `/ns vote now`      | `/nightskipper vote now`      - command for players, that let vote for skipping night or thunderstorm at the moment
@@ -35,9 +37,9 @@ feature:
     spectator: true
     vanished: true
 
-  words-list:
+  worlds-list:
     mode: blacklist  # blacklist/whitelist
-    words: [minecraft:the_nether, minecraft:the_end]
+    worlds: [minecraft:the_nether, minecraft:the_end]
 
   animation-frame:
     enabled: true                # skipping night/thunderstorm animation enabled
@@ -46,11 +48,17 @@ feature:
     frequency: 1                 # animation frequency in server ticks
 
   reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
+  send-skip-suggestion: true     # Works only if `feature.command.now-vote` is enabled
 
-condition:       # if condition is true, then night or thunderstorm will skipped (also if one player is sleeping at least)
-  op: '>='       # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
-  lvalue: voted  # variable `voted` online players who voted
-  rvalue: 50%    # 50% of online player count
+condition:            # if condition is true, then night or thunderstorm will skipped
+  vote:
+    op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
+    lvalue: voted     # variable `voted` - online players who voted
+    rvalue: 50%       # 50% of online player count
+  sleep:
+    op: '>'
+    lvalue: sleeping  # variable `sleeping` - online players who are sleeping
+    rvalue: 0         # 0 players
 
 text:  # message texts
   night: night
@@ -62,6 +70,7 @@ text:  # message texts
   finished: '&2&+%target% skipped!'
   cannot-skip: '&cNow is not night or thunderstorm!'
   goodnight: '&dGood night!'
+  wakeup: '%text.finished%'
 
   always-vote-enabled: '&2%sender%, now your vote will be counted automatically!'
   always-vote-disabled: '&c%sender%, now in order for your voice to be taken into account, you need to use the command `%prefix%%label% vote now` or lie down on the bed'
@@ -69,11 +78,16 @@ text:  # message texts
   already-voted: '&c%sender%, your vote has already been counted!'
   cannot-vote: '&c%sender%, you cannot vote now!'
 
+  skip-suggestion: '&6Do you wanna skipping %target%? %vote-button%'
+  vote-button: '[&b&3Vote&r]'
+  vote-button-extra: '&o&dVoting for skipping %target%'
+
   voted-now: Voted for skipping %voted% out of %players%
   voted-layed-now: Voted for skipping %voted% out of %players% (%sleeping% are sleeping)
 
   config-reloaded: '&2Config reloaded'
   config-reseted: '&2Config reseted'
+  invalid-config-key: '&cInvalid config key: `%key%`!'
 
   feature-disabled: '&cThis feature is disabled or unavailable!'
   invalid-format: '&cInvalid command format!'
@@ -82,9 +96,11 @@ text:  # message texts
     &n&lCommand usage:&r
     %prefix%%label% skip
     %prefix%%label% config reset
+    %prefix%%label% config value
     %prefix%%label% config reload
     %prefix%%label% vote now
     %prefix%%label% vote always
+
 ```
 
 [[Download latest version]](https://github.com/TeaCondemns/night-skipper-plugin/releases/tag/normal-functionality)
