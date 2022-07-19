@@ -103,4 +103,4 @@ text:  # message texts
 
 ```
 
-[[Download latest version]](https://github.com/TeaCondemns/night-skipper-plugin/releases/tag/final-functionality)
+[[Download latest version]](https://github.com/TeaCondemns/night-skipper-plugin/releases/tag/final-functionality-fix)
