@@ -50,7 +50,8 @@ public final class SleepUtil {
             WeatherUtil.clear();
 
         if (!NightSkipper.getFeatureEnabled("animation-frame.enabled")) {
-            skipFinishingInterface.onFinish();
+            if (skipFinishingInterface != null) skipFinishingInterface.onFinish();
+            skipFinishingInterface = null;
             return;
         }
 

@@ -90,9 +90,8 @@ public class NightSkipperCommand extends AbstractCommand {
                     }
 
                     if (SleepUtil.isSleepTime()) {
-                        SleepUtil.skipNight(() -> {
-                            commandSender.sendMessage(NightSkipper.getText("finished", formatVars));
-                        });
+                        SkipUtil.skipCmdInserted();
+                        SleepUtil.skipNight(() -> commandSender.sendMessage(NightSkipper.getText("finished", formatVars)));
 
                         commandSender.sendMessage(NightSkipper.getText("in-progress", formatVars));
                         return;

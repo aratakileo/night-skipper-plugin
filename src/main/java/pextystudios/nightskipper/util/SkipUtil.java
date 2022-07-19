@@ -9,6 +9,7 @@ import java.util.HashMap;
 public final class SkipUtil {
     private static final ConditionEngine conditionEngine = new ConditionEngine();
     private static boolean inited = false;
+    private static boolean pSkipCmdInserted = false;
 
     private static void init() {
         if (!inited) {
@@ -17,6 +18,10 @@ public final class SkipUtil {
             conditionEngine.addGetter("voted", PlayerUtil::votePlayerCount);
             conditionEngine.addGetter("sleeping", PlayerUtil::lyingPlayerCount);
         }
+    }
+
+    public static void skipCmdInserted() {
+        pSkipCmdInserted = true;
     }
 
     public static void tryToSkip() {
@@ -35,7 +40,7 @@ public final class SkipUtil {
         formatVars.put("voted", String.valueOf(PlayerUtil.votePlayerCount()));
         formatVars.put("sleeping", String.valueOf(PlayerUtil.lyingPlayerCount()));
 
-        if (!conditionEngine.exec(config.getString("condition.sleep.lvalue"), config.getString("condition.sleep.rvalue"), config.getString("condition.sleep.op"))) {
+        if (!conditionEngine.exec(config.getString("condition.sleep.lvalue"), config.getString("condition.sleep.rvalue"), config.getString("condition.sleep.op")) && !pSkipCmdInserted) {
             NotificationUtil.send(NightSkipper.getText("voted-layed-now", formatVars));
             SleepUtil.cancelSkipNight();
             SleepUtil.reloadTarget();
@@ -43,7 +48,7 @@ public final class SkipUtil {
             return;
         }
 
-        if (!conditionEngine.exec(config.getString("condition.vote.lvalue"), config.getString("condition.vote.rvalue"), config.getString("condition.vote.op"))) {
+        if (!conditionEngine.exec(config.getString("condition.vote.lvalue"), config.getString("condition.vote.rvalue"), config.getString("condition.vote.op")) && !pSkipCmdInserted) {
             NotificationUtil.send(NightSkipper.getText("voted-now", formatVars));
             SleepUtil.cancelSkipNight();
             SleepUtil.reloadTarget();
@@ -58,6 +63,8 @@ public final class SkipUtil {
                 NotificationUtil.send(NightSkipper.getText("wakeup", formatVars), 5000);
                 PlayerUtil.removeAllCmdPlayer();
                 MailingUtil.clear();
+
+                pSkipCmdInserted = false;
             });
     }
 }
