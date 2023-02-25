@@ -1,4 +1,4 @@
-# Night Skipper [plugin for Minecraft 1.13+] <img src="https://github.com/teacondemns/static.pexty.xyz/blob/main/src/icon/emoji/animated/minecraft.gif?raw=true" height="35"/>
+# Night Skipper [plugin for Minecraft 1.13+] <img src="https://github.com/teacondemns/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 
 ![Preview](https://github.com/TeaCondemns/night-skipper-plugin/raw/main/preview.gif)
 
