@@ -7,7 +7,7 @@ feature:
     now-vote: true     # /ns vote now    | /nightskipper vote now
     always-vote: true  # /ns vote always | /nightskipper vote always
 
-  clear-rain: true  # clear rain when night will skipped
+  clear-rain: true  # clear rain when night will skipp
 
   exclude:  # exclude players out of counting with that modes:
     adventure: true
@@ -28,7 +28,7 @@ feature:
   reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
   send-skip-suggestion: true     # Works only if `feature.command.now-vote` is enabled
 
-condition:            # if condition is true, then night or thunderstorm will skipped
+condition:            # if condition is true, then night or thunderstorm will skipp
   vote:
     op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
     lvalue: voted     # variable `voted` - online players who voted
