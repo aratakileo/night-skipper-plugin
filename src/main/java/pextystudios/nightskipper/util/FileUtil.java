@@ -13,17 +13,17 @@ public final class FileUtil {
         return NightSkipper.getInstance().getDataFolder().getAbsolutePath();
     }
 
-    private static String getPath(String path, boolean globalSpace) {
-        return (globalSpace ? "" : getLocalAbsolutePath()) + "/" + path.replace("\\", "/");
+    private static String getPath(String path, boolean isInGlobalSpace) {
+        return (isInGlobalSpace ? "" : getLocalAbsolutePath()) + "/" + path.replace("\\", "/");
     }
 
     public static boolean writeFile(String path, String text) {
         return writeFile(path, text, false);
     }
 
-    public static boolean writeFile(String path, String text, boolean globalSpace) {
+    public static boolean writeFile(String path, String text, boolean isInGlobalSpace) {
         try {
-            BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(getPath(path, globalSpace)), StandardCharsets.UTF_8);
+            BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(getPath(path, isInGlobalSpace)), StandardCharsets.UTF_8);
             bufferedWriter.write(text);
             bufferedWriter.close();
 
@@ -37,9 +37,9 @@ public final class FileUtil {
         return isFile(path, false);
     }
 
-    public static boolean isFile(String path, boolean globalSpace) {
+    public static boolean isFile(String path, boolean isInGlobalSpace) {
         try {
-            (new FileReader(getPath(path, globalSpace))).close();
+            (new FileReader(getPath(path, isInGlobalSpace))).close();
             return true;
         } catch (Exception e) {
             return false;
@@ -47,23 +47,23 @@ public final class FileUtil {
     }
 
     public static String readFile(String path) {
-        return readFile(path, false, false);
+        return readFile(path, true, false);
     }
 
-    public static String readFile(String path, boolean saveReading) {
-        return readFile(path, saveReading, false);
+    public static String readFile(String path, boolean safeRead) {
+        return readFile(path, safeRead, false);
     }
 
-    public static String readFile(String path, boolean saveReading, boolean globalSpace) {
+    public static String readFile(String path, boolean safeRead, boolean isInGlobalSpace) {
         try {
-            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(getPath(path, globalSpace)), StandardCharsets.UTF_8);
+            BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(getPath(path, isInGlobalSpace)), StandardCharsets.UTF_8);
             String text = bufferedReader.lines().collect(Collectors.joining("\n"));
             bufferedReader.close();
 
             return text;
         } catch (Exception e) {
-            if (saveReading) {
-                writeFile(getPath(path, globalSpace), "", globalSpace);
+            if (safeRead) {
+                writeFile(getPath(path, isInGlobalSpace), "", isInGlobalSpace);
                 return "";
             }
 

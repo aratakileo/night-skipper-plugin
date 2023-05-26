@@ -28,7 +28,7 @@ public final class PlayerUtil {
     private static void checkDataInit() {
         if (alwaysVotingPlayers != null) return;
 
-        alwaysVotingPlayers = FileUtil.readFile(whoAlwaysVoteFile, true).split("\n");
+        alwaysVotingPlayers = FileUtil.readFile(whoAlwaysVoteFile).split("\n");
 
         int i = 0;
         for (String player: alwaysVotingPlayers) {
