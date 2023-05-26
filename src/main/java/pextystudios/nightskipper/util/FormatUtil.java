@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 public final class FormatUtil {
     private final static Pattern pattern = Pattern.compile("&([\\dA-Fa-fk-oK-OrR+]|\\+\\+|--|#[\\da-fA-F]{6})");
+    private final static char PARAGRAPH_CHAR = '\u00A7';
 
     public static @NotNull String format(@NotNull String text) {
         return format(text, null);
@@ -33,7 +34,7 @@ public final class FormatUtil {
                 continue;
             }
 
-            text = text.replace("&" + value, "§" + value);
+            text = text.replace("&" + value, PARAGRAPH_CHAR + value);
         }
 
         return text;
