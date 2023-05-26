@@ -1,9 +1,10 @@
-name: ${artifactId}
-version: ${version}
+name: NightSkipper
+version: '${version}'
 main: pextystudios.nightskipper.NightSkipper
 api-version: 1.13
-authors: [ TeaCondemns ]
-description: NightSkipper allows you to skip nights differently
+authors: [TeaCondemns]
+description: NightSkipper allows you to skip nights differently! Players will be able to skip the night with beautiful animation, according to the configuration settings, they will be able to do this either with automatic consideration of their voice, or with consideration of their voice through the use of a command, or if they went to bed
+website: https://github.com/teacondemns/night-skipper-plugin
 commands:
   nightskipper:
     aliases:

@@ -3,7 +3,7 @@ package pextystudios.nightskipper.command;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pextystudios.nightskipper.*;
+import pextystudios.nightskipper.NightSkipper;
 
 import java.util.ArrayList;
 import java.util.List;
