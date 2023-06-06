@@ -10,8 +10,10 @@ commands:
     aliases:
       - ns
     description: NightSkipper plugin command
-    permission: nightskipper.admin
 
 permissions:
   nightskipper.admin:
     default: op
+
+  nightskipper.other:
+    default: not op

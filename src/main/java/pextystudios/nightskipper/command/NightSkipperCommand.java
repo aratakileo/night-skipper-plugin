@@ -81,7 +81,7 @@ public class NightSkipperCommand extends AbstractCommand {
         formatVars.put("prefix", commandSender.getName().equals("CONSOLE") ? "" : "/");
         formatVars.put("target", SleepUtil.getTarget());
 
-        if (commandSender.hasPermission("nightskipper.admin"))
+        if (commandSender.hasPermission("nightskipper.admin")) {
             if (args.length > 0) {
                 if (args.length == 1 && args[0].equals("skip")) {
                     if (SleepUtil.isNightSkipActive()) {
@@ -133,8 +133,7 @@ public class NightSkipperCommand extends AbstractCommand {
                                     commandSender.sendMessage(ChatColor.RED + "This value does not exist!");
                                     return;
                                 }
-                            }
-                            else if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds"))
+                            } else if (StringUtils.startsWith(args[2], "feature.worlds-list.worlds"))
                                 value = NightSkipper.getInstance().getConfig().getStringList(args[2]).toString();
                             else value = NightSkipper.getInstance().getConfig().getString(args[2]);
 
@@ -155,7 +154,7 @@ public class NightSkipperCommand extends AbstractCommand {
                                 if (Pattern.compile("^true|false$").matcher(newValue).find())
                                     NightSkipper.getInstance().getConfig().set(args[2], newValue.equals("true"));
                                 else if (Pattern.compile("^\\d+$").matcher(newValue).find())
-                                    NightSkipper.getInstance().getConfig().set(args[2], (int)Double.parseDouble(newValue));
+                                    NightSkipper.getInstance().getConfig().set(args[2], (int) Double.parseDouble(newValue));
                                 else
                                     NightSkipper.getInstance().getConfig().set(args[2], newValue.replace("\\\n", "\n"));
                             }
@@ -168,6 +167,7 @@ public class NightSkipperCommand extends AbstractCommand {
                     }
                 }
             }
+        }
 
         if (args.length == 2 && args[0].equals("vote")) {
             if (!PlayerUtil.getPlayerNames(true).contains(commandSender.getName())) {
