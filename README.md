@@ -1,10 +1,9 @@
-# Night Skipper [plugin for Minecraft 1.13+] <img src="https://github.com/teacondemns/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
+# Night Skipper [plugin for Minecraft 1.13+] <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 
-![Preview](https://github.com/TeaCondemns/night-skipper-plugin/raw/main/preview.gif)
+![Preview](https://github.com/aratakileo/night-skipper-plugin/raw/main/preview.gif)
 
 NightSkipper allows you to skip nights differently!
 Players will be able to skip the night with beautiful animation, according to the configuration settings, they will be able to do this either with automatic consideration of their voice, or with consideration of their voice through the use of a command, or if they went to bed.
-> **WORKS ONLY WITH SERVERS THAT HAS ONLY ONE WORLD!**
 
 ### Commands
 `/ns skip`          | `/nightskipper skip`          - command for admins, that let skip night or thunderstorm
@@ -31,7 +30,7 @@ feature:
     now-vote: true     # /ns vote now    | /nightskipper vote now
     always-vote: true  # /ns vote always | /nightskipper vote always
 
-  clear-rain: true  # clear rain when night will skipped
+  clear-rain: true  # clear rain when night will skipp
 
   exclude:  # exclude players out of counting with that modes:
     adventure: true
@@ -52,7 +51,7 @@ feature:
   reset-phantom-statistic: true  # Treats everyone online as if they have slept in the last 3 days after the night is skipped (check out /gamerule doInsomnia on 1.15+)
   send-skip-suggestion: true     # Works only if `feature.command.now-vote` is enabled
 
-condition:            # if condition is true, then night or thunderstorm will skipped
+condition:            # if condition is true, then night or thunderstorm will skipp
   vote:
     op: '>='          # one of operators `>=`, `<=`, `==`, `!=`, `>`, `<`
     lvalue: voted     # variable `voted` - online players who voted
@@ -105,4 +104,4 @@ text:  # message texts
 
 ```
 
-[[Latest release]](https://github.com/TeaCondemns/night-skipper-plugin/releases/tag/final-functionality-fix)
+[[Latest release]](https://github.com/aratakileo/night-skipper-plugin/releases/tag/final-functionality-fix)
