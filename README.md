@@ -1,4 +1,4 @@
-# Night Skipper [plugin for Minecraft 1.13+] <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
+# Night Skipper [1.13+] <img src="https://github.com/aratakileo/static.pexty.xyz/blob/main/src/emoji/animated/minecraft.gif?raw=true" height="35"/>
 
 ![Preview](https://github.com/aratakileo/night-skipper-plugin/raw/main/preview.gif)
 
@@ -18,7 +18,7 @@ Players will be able to skip the night with beautiful animation, according to th
 
 `/ns vote always`   | `/nightskipper vote always`   - command for players, that let always counting vote for skipping night or thunderstorm after using this command
 
-### Settings in `config.yml`
+### Default settings in `config.yml`
 
 ```yml
 feature:
@@ -103,5 +103,3 @@ text:  # message texts
     %prefix%%label% vote always
 
 ```
-
-[[Latest release]](https://github.com/aratakileo/night-skipper-plugin/releases/tag/final-functionality-fix)
